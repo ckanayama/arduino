@@ -35,7 +35,8 @@ void setup() {
   String path = "/v1/forecast?latitude=" + String(LATITUDE) +
                 "&longitude=" + String(LONGITUDE) +
                 "&daily=temperature_2m_max,temperature_2m_min,precipitation_sum" +
-                "&models=jma_seamless&timezone=Asia%2FTokyo";
+                "&models=jma_seamless&timezone=Asia%2FTokyo" +
+                "&forecast_days=1";
 
   // APIへリクエスト
   Serial.println("Sending request...");
