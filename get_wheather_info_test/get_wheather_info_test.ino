@@ -1,5 +1,6 @@
 #include <WiFiS3.h>
 #include <ArduinoHttpClient.h>
+#include <ArduinoJson.h>
 #include "arduino_secrets.h"
 
 // Wi-Fi設定
@@ -46,10 +47,12 @@ void setup() {
   int statusCode = client.responseStatusCode();
   String response = client.responseBody();
 
-  Serial.print("Status code: ");
-  Serial.println(statusCode);
-  Serial.println("Response:");
-  Serial.println(response);
+  // JSONパース
+  JsonDocument doc;
+  deserializeJson(doc, response);
+
+  Serial.println("Status code: " + String(statusCode));
+  Serial.println("temperature_2m_max: " + String(doc["daily"]["temperature_2m_max"][0].as<float>()));
 }
 
 void loop() {
