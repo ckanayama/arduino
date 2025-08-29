@@ -27,7 +27,7 @@ void setup() {
     Serial.print("wifi status: ");
     Serial.println(WiFi.status());
   }
-  Serial.println(" connected!");
+  Serial.println("connected!");
   
   delay(1000); // TCPスタックが安定するまで待機
 
