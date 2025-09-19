@@ -5,6 +5,7 @@
 - Arduino UNO R4 WiFi
 - [ダイナミックスピーカー 50mmΦ 8Ω 0.4W](https://akizukidenshi.com/catalog/g/g109013/)
 - [音声合成LSI ATP3011F1-PU(ゆっくりな女性の音声)](https://akizukidenshi.com/catalog/g/g106220/)
+- [ミニPIRモーションセンサ](https://www.switch-science.com/products/7028)
 
 ## 天気情報API
 - Open-Meteo JMA API
