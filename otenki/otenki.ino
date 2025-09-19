@@ -23,6 +23,10 @@ int ledPin = 13;
 int inputPin = 2;
 int val = 0;
 
+// リクエストを過剰に送信しないための制御
+unsigned long lastRequestTime = -300000;
+const unsigned long requestInterval = 300000; // 5分 = 300,000 ミリ秒
+
 // シリアル通信設定
 void setup() {
   // Serial Monitor
@@ -52,8 +56,9 @@ void setup() {
 
 void loop() {
   val = digitalRead(inputPin);
+  unsigned long currentTime = millis();
 
-  if (val == HIGH) {
+  if (val == HIGH && (currentTime - lastRequestTime >= requestInterval)) {
     digitalWrite(ledPin, HIGH);
 
     // API用のパスを生成
@@ -82,7 +87,8 @@ void loop() {
     String comment = printWeatherAdvice(tempMax, tempMin, precipitation);
 
     softSerial.print("ohayougozaimasu. " + comment + "\r");
-    delay(10000);
+
+    lastRequestTime = currentTime;
   } else {
     digitalWrite(ledPin, LOW);
   }
