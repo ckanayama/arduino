@@ -24,8 +24,9 @@ int inputPin = 2;
 int val = 0;
 
 // リクエストを過剰に送信しないための制御
-unsigned long lastRequestTime = -300000;
-const unsigned long requestInterval = 300000; // 5分 = 300,000 ミリ秒
+unsigned long lastRequestTime = -600000;
+const unsigned long requestInterval = 600000; // 10分 = 600,000 ミリ秒
+String comment = "";
 
 // シリアル通信設定
 void setup() {
@@ -58,37 +59,41 @@ void loop() {
   val = digitalRead(inputPin);
   unsigned long currentTime = millis();
 
-  if (val == HIGH && (currentTime - lastRequestTime >= requestInterval)) {
+  if (val == HIGH) {
     digitalWrite(ledPin, HIGH);
 
-    // API用のパスを生成
-    String path = "/v1/forecast?latitude=" + String(LATITUDE) +
-                  "&longitude=" + String(LONGITUDE) +
-                  "&daily=temperature_2m_max,temperature_2m_min,precipitation_sum" +
-                  "&models=jma_seamless&timezone=Asia%2FTokyo" +
-                  "&forecast_days=1";
+    if (currentTime - lastRequestTime >= requestInterval) {
+      // API用のパスを生成
+      String path = "/v1/forecast?latitude=" + String(LATITUDE) +
+                    "&longitude=" + String(LONGITUDE) +
+                    "&daily=temperature_2m_max,temperature_2m_min,precipitation_sum" +
+                    "&models=jma_seamless&timezone=Asia%2FTokyo" +
+                    "&forecast_days=1";
 
-    // APIリクエスト
-    Serial.println("Sending request...");
-    client.get(path);
+      // APIリクエスト
+      Serial.println("Sending request...");
+      client.get(path);
 
-    // APIレスポンスを受け取る
-    int statusCode = client.responseStatusCode();
-    String response = client.responseBody();
-    Serial.println("Status code: " + String(statusCode));
+      // APIレスポンスを受け取る
+      int statusCode = client.responseStatusCode();
+      String response = client.responseBody();
+      Serial.println("Status code: " + String(statusCode));
 
-    // JSONパース
-    JsonDocument doc;
-    deserializeJson(doc, response);
-    float tempMax = doc["daily"]["temperature_2m_max"][0].as<float>();
-    float tempMin = doc["daily"]["temperature_2m_min"][0].as<float>();
-    float precipitation = doc["daily"]["precipitation_sum"][0].as<float>();
+      // JSONパース
+      JsonDocument doc;
+      deserializeJson(doc, response);
+      float tempMax = doc["daily"]["temperature_2m_max"][0].as<float>();
+      float tempMin = doc["daily"]["temperature_2m_min"][0].as<float>();
+      float precipitation = doc["daily"]["precipitation_sum"][0].as<float>();
 
-    String comment = printWeatherAdvice(tempMax, tempMin, precipitation);
+      comment = printWeatherAdvice(tempMax, tempMin, precipitation);
+    } 
 
     softSerial.print("ohayougozaimasu. " + comment + "\r");
 
     lastRequestTime = currentTime;
+
+    delay(15000); // 15秒待機
   } else {
     digitalWrite(ledPin, LOW);
   }
