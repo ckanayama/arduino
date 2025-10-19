@@ -11,7 +11,7 @@ String printWeatherAdvice(float tempMax, float tempMin, float precipitation) {
   } else if (tempMax >= 30.0) {
     tempComment = "kyo'-wa manatubidesu horeizai,wo wasurezuni.";
   } else if (tempMin <= 10.0) {
-    tempComment = "kyo'-wa totemosamuidesu boukangi,wo wasurezuni.";
+    tempComment = "kyo'-wa totemosamuidesu boukantaisaku,wo wasurezuni.";
   } else if (tempMin <= 15.0) {
     tempComment = "kyo'-wa hadazamuidesu uwagi,wo wasurezuni.";
   } else {
